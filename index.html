@@ -8,9 +8,7 @@
 <meta name="description" content="Крути рулетку и получай тему для речи: случайные темы, истории, аргументация, питч.">
 <link rel="icon" type="image/png" href="static/favicon.png">
 <style>
-  /* Lora (serif) and Excalifont (handwritten). Files live in
-     static/fonts/ next to index.html; until then the fallbacks
-     (PT Serif / Caveat) are used, so nothing breaks. */
+
   @font-face{
     font-family:'Lora'; font-style:normal; font-weight:400; font-display:swap;
     src: local('Lora'),
@@ -37,7 +35,7 @@
     --ink-soft: #5C6B77;
     --ink-faint: #93A1AC;
     --line: #D5DEE2;
-    --line-strong: #B4C2CB;   /* рамка баров выбора: чуть темнее обычной линии */
+    --line-strong: #B4C2CB;   
     --accent: #0077B3;
     --accent-soft: #E4F1F8;
     --warm: #C6853E;
@@ -107,7 +105,6 @@
 
   .reveal{ opacity: 0; transform: translateY(22px); }
 
-  /* ---------- side nav (shared with trainer/history pages) ---------- */
   .side-nav{
     position: fixed; top:0; left:0; bottom:0; z-index: 200;
     width: var(--side-rail);
@@ -163,7 +160,6 @@
   .side-word-title{ font-family:var(--font-serif); font-size:15px; margin-bottom:6px; white-space:normal; }
   .side-word-def{ font-size:12px; line-height:1.5; color: var(--ink-soft); white-space:normal; }
 
-  /* ---------- header ---------- */
   header{
     position: sticky; top:0; z-index: 50;
     background: rgba(247,250,252,0.82);
@@ -242,7 +238,6 @@
   .section-head .eyebrow{ font-size: 12.5px; color: var(--ink-faint); letter-spacing:.03em; margin-bottom: 8px; }
   .section-head h2{ font-size: 26px; }
 
-  /* ---------- mode toggle ---------- */
   .mode-toggle{
     display:inline-flex; flex-wrap:wrap; row-gap:6px; padding:4px; gap:4px;
     background: transparent; border: 1px solid var(--line-strong); border-radius: 999px;
@@ -256,7 +251,6 @@
   .lbl-short{ display:none; }
   .mode-btn.is-active{ background: var(--ink); color:#fff; }
 
-  /* ---------- roulette ---------- */
   .generator-layout{
     display:flex; align-items:center; gap:48px; margin-top:32px; flex-wrap:wrap;
   }
@@ -300,7 +294,6 @@
   .roulette-row.is-current.is-landed{ animation: rouletteLand .5s var(--ease); }
 
 
-  /* ---------- слова: уровни и карточка с описанием ---------- */
   .level-row[hidden], .word-card[hidden], .mode-btn[hidden]{ display:none !important; }
   .level-row{ display:flex; align-items:center; gap:12px; margin-top:16px; flex-wrap:wrap; }
   .level-label{ font-size:12.5px; color: var(--ink-faint); letter-spacing:.02em; }
@@ -346,7 +339,6 @@
   }
 
 
-  /* ---------- переход на платный ресурс ---------- */
   .paid-cta[hidden]{ display:none !important; }
   .paid-cta{
     display:flex; align-items:center; justify-content:space-between; gap:20px;
@@ -369,7 +361,6 @@
   }
 
 
-  /* ---------- выбор категории (овальный выпадающий список) ---------- */
   .cat-row[hidden], .cat-menu[hidden]{ display:none !important; }
   .cat-row{ margin-top:14px; }
   .cat-dd{ position:relative; display:inline-block; max-width:100%; }
@@ -395,14 +386,12 @@
   .cat-menu li:hover{ background: var(--accent-soft); }
   .cat-menu li[aria-selected="true"]{ background: var(--accent); color:#fff; }
 
-  /* бар режимов, выпадающий список категорий и уровни: по центру */
   .level-row{ justify-content:center; }
   @media (min-width: 641px){
     .mode-toggle{ display:flex; width:fit-content; max-width:100%; margin-left:auto; margin-right:auto; }
   }
   .generator-actions{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
 
-  /* ---------- timer ---------- */
   .timer-card{
     margin-top: 24px;
     display:flex; align-items:center; gap:30px; flex-wrap:wrap; justify-content:space-between;
@@ -429,7 +418,6 @@
   .timer-ring-wrap.is-done .timer-value{ font-size:15px; color: var(--good); }
 
 
-  /* ---------- mobile bottom nav (5 tabs: icon + label, same on every page) ---------- */
   .mobile-nav{
     display:none; position:fixed; left:0; right:0; bottom:0; z-index:80;
     background: rgba(255,255,255,.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -461,13 +449,11 @@
 
   .hidden{ display:none !important; }
 
-  /* ---------- typography (Inter + PT Serif, Russian) ---------- */
   html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
   body{ font-kerning:normal; text-rendering:optimizeLegibility; }
   h1,h2,h3{ text-wrap:balance; hyphens:manual; }
   p{ text-wrap:pretty; }
 
-  /* ---------- mobile polish ---------- */
   html{ -webkit-tap-highlight-color: transparent; }
   a, button, [role="button"], [role="link"], input, select, textarea{ touch-action: manipulation; }
   body:has(.modal-overlay.is-open){ overflow:hidden; }
@@ -501,10 +487,9 @@
     .mode-btn{ flex:1 1 0; min-width:0; padding:10px 8px; border-radius:999px; white-space:normal; line-height:1.25; min-height:46px; font-size:13px; }
   }
 
-  /* ================= синхронизация с index.html ================= */
   #bgImage{ position:fixed; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; background:url('static/background.jpg') center / cover no-repeat; }
 
-  /* Шрифты интерфейса: как в index (кнопки, навигация, меню, чипы, логотип) */
+
   .btn, .side-nav-item, .user-dropdown a, .user-dropdown button,
   .mode-btn, .timer-chip, .kind-btn, .skill-reset, .logo{
     font-family: var(--font-serif); font-weight:400;
@@ -518,12 +503,12 @@
   .welcome h1{ font-family: var(--font-sans); font-size: clamp(34px, 5vw, 54px); }
   .welcome-sub{ font-family: var(--font-hand); font-size:25px; color: var(--accent); }
 
-  /* Стекло поверх фонового видео (как .card и header в index) */
+
   .card, header, .roulette-card, .training-card,
   .skill-shortcut, .kind-switch, .lib-card.lc{ background: rgba(247,250,252,0.30); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
   .roulette-card, .training-card{ background-image:none; }
 
-  /* Кнопки: скруглённые, цвет --accent */
+
   .btn{ border-radius:999px; padding:12px 26px; }
   .btn-primary{ background: var(--accent); color:#fff; }
   .btn-primary:hover{ background: var(--accent); filter: brightness(.9); transform: translateY(-1px); }
@@ -533,7 +518,7 @@
   .btn-danger-ghost, .btn-danger-solid{ border-radius:999px; }
   @media (max-width: 860px){ .btn{ min-height:44px; } }
 
-  /* Скользящий индикатор выбора (как .tc-type-indicator в index, цвет --accent) */
+
   .sel-indicator{
     position:absolute; top:0; left:0; z-index:0; pointer-events:none; opacity:0;
     transition: transform .5s var(--ease), width .5s var(--ease), height .5s var(--ease), opacity .3s var(--ease);
@@ -553,7 +538,6 @@
   #skillShortcuts .skill-shortcut.is-active{ border-color: var(--line); box-shadow:none; }
   #skillShortcuts .skill-shortcut.is-active:hover{ border-color: rgba(0,119,179,.35); }
 
-  /* «Крутить!» и «Тренироваться»: перелив градиента + блик при наведении, «вдавливание» при нажатии (как «Начать запись» в index) */
   #spinBtn, #paidLink, #paidLinkTop{
     position:relative; overflow:hidden; isolation:isolate;
     background: linear-gradient(110deg, #0077B3 0%, #3AA8DC 50%, #0077B3 100%);
@@ -723,9 +707,6 @@
 (function(){
   'use strict';
 
-  // Same visual language and auth pattern as app/static/app/index.html
-  // and history.html. Topic data lives in its own file (topics-data.json)
-  // instead of being hardcoded here, same spirit as words.json.
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasGsap = !!(window.gsap && window.ScrollTrigger);   // без интернета/CDN страница всё равно работает
@@ -867,7 +848,7 @@
   }
   const t = (key) => (I18N[state.lang] || I18N.ru)[key];
 
-  // Слова лежат в topics.json (en.words): {id, text, level, def, example}. level — уровень CEFR.
+
   // ---- Платный ресурс ----
   // Вставьте ссылку в PAID_URL: пока она пустая, блок с кнопкой скрыт.
   // К ссылке автоматически добавляются UTM-метки, чтобы видеть переходы и в аналитике на той стороне.
@@ -889,7 +870,6 @@
     timer: { duration: 300, remaining: 300, running: false, handle: null },
   };
 
-  /* ---------- topic data ---------- */
 
   async function loadTopics(){
     try {
@@ -897,15 +877,15 @@
       if (!res.ok) throw new Error('topics_fetch_failed');
       state.all = await res.json();
     } catch (e) {
-      state.all = {};     // темы недоступны, но слова работают без JSON
+      state.all = {};     
     }
     buildPools();
   }
   function buildPools(){
     const base = state.all[state.lang] || state.all.ru || {};
-    state.pools = Object.assign({}, base);   // слова приходят из topics.json (en.words), пока только английские
+    state.pools = Object.assign({}, base);   
   }
-  // Пул текущего режима; в режиме слов учитывает выбранный уровень
+
   function getPool(mode){
     mode = mode || state.mode;
     const pool = state.pools[mode];
@@ -918,10 +898,6 @@
     return pool;
   }
 
-  /* ---------- sound (synthesised, no audio files needed) ---------- */
-  // Мягкий «маримба/колокольчик»: чистые синусы, быстрая атака без щелчка,
-  // длинное затухание, всё через фильтр и лёгкое эхо. Ноты — из пентатоники,
-  // поэтому любая последовательность звучит созвучно.
 
   let audioCtx = null, bus = null;
   const SCALE = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50]; // до-ре-ми-соль-ля-до
@@ -934,7 +910,6 @@
         master.gain.value = 0.9;
         const tone = audioCtx.createBiquadFilter();
         tone.type = 'lowpass'; tone.frequency.value = 3200; tone.Q.value = 0.3;
-        // тихое эхо — «воздух» вокруг звука
         const echo = audioCtx.createDelay(0.6); echo.delayTime.value = 0.22;
         const fb = audioCtx.createGain(); fb.gain.value = 0.28;
         const wet = audioCtx.createGain(); wet.gain.value = 0.32;
@@ -950,7 +925,7 @@
     } catch (e) { return null; }
   }
 
-  // одна мягкая нота: основной тон + тихий обертон на октаву выше
+
   function playNote(freq, opts){
     const ctx = getAudioCtx();
     if (!ctx || !bus) return;
@@ -974,11 +949,10 @@
     } catch (e) { /* audio unavailable -- fail silently */ }
   }
 
-  // Звук вращения — файл sound.mp3 (4,5 с, тихий, поэтому усиливаем).
-  // Декодируем заранее; если не вышло, играем обычным <audio>.
+
   const SPIN_URL = 'sound.mp3';
   const SPIN_GAIN = 3;
-  // Моменты сильных щелчков в sound.mp3, секунды от начала. Интервалы только растут: барабан замедляется
+  
   const SPIN_BEATS = [0.054, 0.137, 0.226, 0.316, 0.411, 0.512, 0.611, 0.709, 0.811, 0.916, 1.028, 1.141, 1.256, 1.376, 1.499, 1.63, 1.763, 1.905, 2.05, 2.206, 2.374, 2.547, 2.739, 2.946, 3.188, 3.478, 3.968];
   let spinBuffer = null, spinAudio = null, spinSrc = null;
   function loadSpinSound(){
@@ -1017,7 +991,7 @@
     } catch (e) {}
   }
   function playLandChime(){
-    // ласковый мажорный аккорд, ноты вступают одна за другой
+
     [523.25, 659.25, 783.99].forEach((f, i) => playNote(f, { when: i * 0.075, dur: 1.4, gain: 0.05, attack: 0.02 }));
   }
   function playTimerTick(){ playNote(440, { dur: 0.18, gain: 0.025, attack: 0.01 }); }
@@ -1025,7 +999,6 @@
     [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => playNote(f, { when: i * 0.14, dur: 1.6, gain: 0.05, attack: 0.02 }));
   }
 
-  /* ---------- слова: карточка и уровни ---------- */
 
   function renderWordCard(word, opts){
     opts = opts || {};
@@ -1038,7 +1011,7 @@
     wordCard.hidden = false;
     if (opts.animate && !reduceMotion){
       wordCard.classList.remove('is-new');
-      void wordCard.offsetWidth;   // перезапуск CSS-анимации
+      void wordCard.offsetWidth;   
       wordCard.classList.add('is-new');
     }
   }
@@ -1069,9 +1042,9 @@
     renderWordCard(state.current, { animate: true });
   }
 
-  /* ---------- переход на платный ресурс + цели Яндекс Метрики ---------- */
 
-  // Отправка цели в Метрику; callback вызывается после отправки (или через 0,5 с, если Метрика недоступна)
+
+
   function ymGoal(name, params, cb){
     let done = false;
     const finish = () => { if (!done){ done = true; if (cb) cb(); } };
@@ -1081,7 +1054,7 @@
         setTimeout(finish, 500);
         return;
       }
-    } catch (e) { /* аналитика не должна ломать страницу */ }
+    } catch (e)
     finish();
   }
 
@@ -1098,20 +1071,20 @@
     if (!PAID_URL){ paidCta.hidden = true; paidLinkTop.hidden = true; return; }
     paidCta.hidden = false; paidLinkTop.hidden = false;
 
-    // Две кнопки (в блоке и в шапке) ведут на одну ссылку; в цель добавляется source, чтобы видеть, какая сработала
+
     [[paidLink, 'block'], [paidLinkTop, 'header']].forEach(([a, source]) => {
       a.href = paidHref();
       a.addEventListener('click', (e) => {
         const params = { lang: state.lang, mode: state.mode, source: source };
         a.href = paidHref();
         const plain = e.button === 0 && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey);
-        if (!plain){ ymGoal('paid_click', params); return; }   // «в новой вкладке» и т.п.: страница остаётся, просто шлём цель
+        if (!plain){ ymGoal('paid_click', params); return; }   
         e.preventDefault();
         ymGoal('paid_click', params, () => { location.href = a.href; });
       });
     });
 
-    // Показ блока: нужен, чтобы считать долю тех, кто нажал (кликов / показов)
+
     if ('IntersectionObserver' in window){
       const io = new IntersectionObserver((entries) => {
         if (entries.some((en) => en.isIntersecting)){
@@ -1123,7 +1096,7 @@
     }
   }
 
-  /* ---------- категории случайных тем ---------- */
+
   const CATS = [
     { k: 'all', e: '🎲' }, { k: 'money', e: '💰' }, { k: 'nutrition', e: '🥗' }, { k: 'interview', e: '💼' },
     { k: 'pitch', e: '💸' }, { k: 'defend', e: '⚖️' }, { k: 'eli5', e: '🧒' }, { k: 'hottakes', e: '🔥' },
@@ -1165,7 +1138,6 @@
   document.addEventListener('click', (e) => { if (!catRow.contains(e.target)) closeCat(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCat(); });
 
-  /* ---------- roulette ---------- */
 
   function pickRandomTopic(pool, avoidId){
     if (!pool || pool.length === 0) return null;
@@ -1186,7 +1158,7 @@
     const pool = getPool();
     const edgeTop = pickRandomTopic(pool, topic.id);
     let edgeBottom = pickRandomTopic(pool, topic.id);
-    // при коротком списке (слова) верх и низ не должны совпадать
+
     if (pool && pool.length > 2 && edgeTop){
       let guard = 0;
       while (edgeBottom.id === edgeTop.id && guard++ < 10) edgeBottom = pickRandomTopic(pool, topic.id);
@@ -1196,8 +1168,8 @@
     rouletteEdgeBottom.textContent = edgeBottom ? edgeBottom.text : '—';
     if (opts.landed){
       rouletteCurrent.classList.remove('is-landed');
-      // eslint-disable-next-line no-unused-expressions
-      void rouletteCurrent.offsetWidth; // restart the CSS animation
+
+      void rouletteCurrent.offsetWidth; 
       rouletteCurrent.classList.add('is-landed');
     }
   }
@@ -1249,8 +1221,6 @@
 
     if (reduceMotion){ land(); return; }
 
-    // Каждый щелчок в звуке = смена темы. Время щелчков измерено по sound.mp3,
-    // последний щелчок = остановка на выбранной теме.
     const t0 = performance.now();
     const lag = (audioCtx && (audioCtx.outputLatency || audioCtx.baseLatency) || 0) * 1000;
     let i = 0, last = null;
@@ -1270,8 +1240,6 @@
   }
 
   spinBtn.addEventListener('click', spin);
-
-  /* ---------- timer ---------- */
 
   function formatTime(totalSeconds){
     const mm = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
@@ -1356,7 +1324,6 @@
   });
   timerResetBtn.addEventListener('click', resetTimer);
 
-  /* ---------- language ---------- */
 
   const langButtons = Array.from(document.querySelectorAll('.lang-btn'));
   function applyLang(){
@@ -1372,7 +1339,7 @@
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     updateCatUi();
-    wordsModeBtn.hidden = state.lang !== 'en';   // слова пока только для английской версии
+    wordsModeBtn.hidden = state.lang !== 'en';   
     timerToggleBtn.textContent = t(state.ui.toggle);
     timerStartBtn.textContent = t(state.ui.start);
     if (state.ui.done) timerValue.textContent = t('done'); else renderTimer();
@@ -1386,14 +1353,13 @@
     buildPools();
     if (state.mode === 'words' && lang !== 'en') setMode('random', { silent: true });
     const pool = getPool();
-    // тема остаётся той же, меняется только язык
+
     state.current = (pool && pool.find((x) => x.id === prevId)) || pickRandomTopic(pool);
     applyLang();
     renderRoulette(state.current, { landed: true });
   }
   langButtons.forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
 
-  /* ---------- reveal + nav highlight ---------- */
 
   function setupRevealAnimations(){
     if (reduceMotion || !hasGsap){
@@ -1409,12 +1375,12 @@
   }
 
   async function init(){
-    // Страница должна открываться даже без topics.json: тогда в барабане прочерки.
+
     try {
       loadSpinSound();
       await loadTopics();
       buildCatMenu();
-      buildLevelChips();   // уровни берутся из слов в topics.json
+      buildLevelChips(); 
       applyLang();
       setupPaidCta();
       state.current = pickRandomTopic(getPool());
@@ -1436,8 +1402,7 @@
 </script>
 
 <script>
-/* Скользящий индикатор выбора. Следит за сменой класса активного элемента,
-   поэтому существующая логика страницы не меняется. */
+  
 (function(){
   'use strict';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1468,7 +1433,6 @@
     }
 
     var mo = new MutationObserver(function(list){
-      // изменения самого индикатора игнорируем, иначе цикл
       list = list.filter(function(r){
         if (r.target === ind) return false;
         if (r.type === 'childList') {
@@ -1479,7 +1443,6 @@
         return true;
       });
       if (!list.length) return;
-      // перерисовка содержимого (innerHTML) — ставим без анимации
       if (list.some(function(r){ return r.type === 'childList'; })) first = true;
       place(true);
     });
@@ -1500,9 +1463,7 @@
 })();
 </script>
 <script>
-/* Эмодзи-картинки из папки emoji/ (файлы вида 1f3ce.png: код строчными буквами).
-   Любой эмодзи в тексте страницы, в том числе появившийся позже, заменяется на <img>.
-   Нет файла — остаётся обычный символ. */
+
 (function(){
   const PATH = 'static/emoji/', EXT = 'png';
 
@@ -1511,9 +1472,8 @@
     '\\p{Regional_Indicator}{2}|[#*0-9]\\uFE0F?\\u20E3|' + unit +
     '(?:\\u200D(?:\\p{Emoji_Presentation}|\\p{Extended_Pictographic})\\uFE0F?(?:\\p{Emoji_Modifier})?)*', 'gu');
   const SKIP = 'script,style,textarea,input,svg,[data-no-emoji],#transcriptText,img.emoji';
-  const failed = new Set();   // эмодзи без файла: больше не трогаем, иначе наблюдатель зациклится
+  const failed = new Set();   
 
-  // Имя файла: коды через дефис без fe0f (1f3ce.png). Запасные имена: с fe0f (1f3ce-fe0f.png)
   function urls(emoji){
     const cps = Array.from(emoji).map(c => c.codePointAt(0).toString(16));
     const plain = cps.filter(c => c !== 'fe0f');
@@ -1569,7 +1529,7 @@
     nodes.forEach(convertText);
   }
 
-  window.renderEmoji = convert;   // вручную: renderEmoji(элемент)
+  window.renderEmoji = convert;   
   convert(document.body);
 
   let queue = new Set(), scheduled = false;
