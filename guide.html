@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F7FAFC">
+<title>Как тренироваться с барабаном — говори·ясно</title>
+<link rel="icon" type="image/png" href="static/favicon.png">
+<style>
+  /* Lora (serif) and Excalifont (handwritten). Drop the files into a
+     fonts/ folder next to index.html; until then the fallbacks
+     (PT Serif / Caveat) are used, so nothing breaks. */
+  @font-face{ font-family:'Lora'; font-style:normal; font-weight:400 700; font-display:swap; src:url('static/fonts/Lora.ttf') format('truetype'); }
+  @font-face{ font-family:'Onest'; font-style:normal; font-weight:100 900; font-display:swap; src:url('static/fonts/Onest-Light.ttf') format('truetype'); }
+    @font-face{
+    font-family:'Caveat'; font-style:normal; font-weight:100; font-display:swap;
+    src: local('Caveat'),
+         url('static/fonts/Caveat.ttf') format('truetype');
+  }
+  :root{
+    --font-body: 'Onest', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-heading: 'Lora', Georgia, 'Times New Roman', serif;
+    --font-hand: 'Caveat', 'Comic Sans MS', cursive;
+    --bg: #F7FAFC;
+    --bg-panel: #FFFFFF;
+    --bg-soft: #EEF3F7;
+    --ink: #16222E;
+    --ink-soft: #5C6B77;
+    --ink-faint: #93A1AC;
+    --line: #D5DEE2;
+    --line-strong: #B4C2CB;   /* рамка баров выбора: чуть темнее обычной линии */
+    --accent: #0077B3;
+    --accent-soft: #E4F1F8;
+    --warm: #CDAE72;
+    --warm-soft: #F4EEDD;
+    --good: #2F8F5B;
+    --good-soft: #E4F5EB;
+    --caution: #7A5CB8;
+    --caution-soft: #EEE9F7;
+    --danger: #C6483E;
+    --danger-soft: #FBE9E7;
+    --radius-s: 3px;
+    --radius-m: 6px;
+    --radius-l: 14px;
+    --ease: cubic-bezier(.19,1,.22,1);
+    --side-rail: 72px;
+    --side-expanded: 264px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background-color: #F7FAFC;
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+      }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+  h1,h2,h3{
+    font-family: var(--font-heading);
+    font-weight:400;
+    letter-spacing: 0;
+    margin: 0;
+    color: var(--ink);
+  }
+  p{ margin:0; }
+  a{ color: inherit; text-decoration: none; }
+  button{ font-family: inherit; cursor: pointer; }
+  ::selection{ background: var(--accent-soft); color: var(--ink); }
+
+  .wrap{ max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 640px){ .wrap{ padding: 0 20px; } }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding: 12px 24px;
+    border-radius: var(--radius-s);
+    font-size: 14.5px; font-weight:400;
+    transition: transform .35s var(--ease), background .3s, box-shadow .3s, opacity .2s;
+    border: none;
+  }
+  .btn-primary{ background: var(--ink); color: #fff; }
+  .btn-primary:hover{ background: var(--accent); transform: translateY(-1px); }
+  .btn-primary:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
+  .btn-ghost{ color: var(--ink); border: 1px solid var(--line); background: transparent; }
+  .btn-ghost:hover{ border-color: var(--ink); }
+
+  .card{
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    padding: 28px;
+  }
+
+  .reveal{ opacity: 0; transform: translateY(22px); }
+
+  /* ---------- side nav (shared with trainer/history pages) ---------- */
+  .side-nav{
+    position: fixed; top:0; left:0; bottom:0; z-index: 2147483000; /* поверх окна ограничения доступа (paywall) */
+    width: var(--side-rail);
+    background: var(--bg-panel);
+    border-right: 1px solid var(--line);
+    display:flex; flex-direction:column;
+    padding: 18px 0 16px;
+    overflow: hidden;
+    transition: width .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  .side-nav:hover, .side-nav:focus-within{
+    width: var(--side-expanded);
+    box-shadow: 12px 0 40px rgba(22,34,46,.10);
+  }
+  @media (max-width: 860px){ .side-nav{ display:none; } }
+
+  .side-nav-items{ display:flex; flex-direction:column; gap:4px; padding: 6px 12px; }
+  .side-nav-item{
+    display:flex; align-items:center; gap:16px;
+    padding: 11px 10px; border-radius: var(--radius-m);
+    white-space:nowrap; transition: background .2s;
+    color: var(--ink-soft);
+  }
+  .side-nav-item:hover{ background: var(--bg-soft); color: var(--ink); }
+  .side-nav-item.is-active{ color: var(--accent); }
+  .side-nav-item.is-active .side-nav-icon{ background: var(--accent); color:#fff; }
+  .side-nav-icon{
+    flex-shrink:0; width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--bg-soft); color: var(--ink);
+  }
+  .side-nav-item.is-profile .side-nav-icon{
+    background: var(--ink); color:#fff; font-family:var(--font-body); font-size:13.5px; font-weight:400;
+  }
+  .side-nav-icon svg{ width:17px; height:17px; }
+  .side-nav-label{
+    font-size:14px;
+    opacity:0; transform: translateX(-6px);
+    transition: opacity .3s var(--ease) .05s, transform .3s var(--ease) .05s;
+  }
+  .side-nav:hover .side-nav-label, .side-nav:focus-within .side-nav-label{ opacity:1; transform:translateX(0); }
+
+  .side-nav-spacer{ flex:1; }
+
+  .side-word-card{
+    margin: 0 12px; padding: 16px 14px;
+    border: 1px solid var(--line); border-radius: var(--radius-m);
+    background: var(--bg-soft);
+    opacity:0; visibility:hidden;
+    transition: opacity .3s var(--ease) .05s, visibility .3s;
+  }
+  .side-nav:hover .side-word-card, .side-nav:focus-within .side-word-card{ opacity:1; visibility:visible; }
+  .side-word-title{ font-family:var(--font-body); font-size:15px; margin-bottom:6px; white-space:normal; }
+  .side-word-def{ font-size:12px; line-height:1.5; color: var(--ink-soft); white-space:normal; }
+
+  /* ---------- header ---------- */
+  header{
+    position: sticky; top:0; z-index: 50;
+    background: rgba(247,250,252,0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height: 72px;
+  }
+  .logo{ font-family:var(--font-body); font-size: 19px; font-weight:400; }
+  .logo span{ color: var(--accent); }
+
+  .user-menu{ position:relative; display:flex; align-items:center; gap:12px; }
+  .avatar{
+    width:36px; height:36px; border-radius:50%;
+    background: var(--ink); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:400; font-family:var(--font-body);
+    flex-shrink:0;
+  }
+  .user-name{ font-size:14px; color: var(--ink); }
+  @media (max-width: 560px){ .user-name{ display:none; } }
+  .user-menu-btn{
+    display:flex; align-items:center; gap:10px; background:transparent; border:none; padding:4px;
+    border-radius: 20px; transition: background .2s;
+  }
+  .user-menu-btn:hover{ background: var(--bg-soft); }
+  .chevron{ width:9px; height:9px; border-right:1.5px solid var(--ink-faint); border-bottom:1.5px solid var(--ink-faint); transform:rotate(45deg); margin-top:-3px; transition: transform .25s var(--ease); }
+  .user-menu.is-open .chevron{ transform: rotate(225deg); margin-top:3px; }
+
+  .user-dropdown{
+    position:absolute; top: calc(100% + 10px); right:0; min-width:190px;
+    background: var(--bg-panel); border:1px solid var(--line); border-radius: var(--radius-m);
+    box-shadow: 0 16px 40px rgba(22,34,46,.14);
+    padding:8px; z-index: 60;
+    opacity:0; visibility:hidden; transform: translateY(-6px);
+    transition: opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
+  }
+  .user-menu.is-open .user-dropdown{ opacity:1; visibility:visible; transform: translateY(0); }
+  .user-dropdown a, .user-dropdown button{
+    display:block; width:100%; text-align:left; background:none; border:none;
+    padding:10px 12px; border-radius: var(--radius-s); font-size:13.5px; color: var(--ink-soft);
+    transition: background .15s, color .15s;
+  }
+  .user-dropdown a:hover, .user-dropdown button:hover{ background: var(--bg-soft); color: var(--ink); }
+  .user-dropdown .divider{ height:1px; background: var(--line); margin: 6px 4px; }
+
+  main{ padding-bottom: 90px; }
+  section{ padding: 56px 0; }
+  section + section{ border-top: 1px solid var(--line); }
+  .section-head{ margin-bottom: 26px; }
+  .section-head .eyebrow{ font-size: 12.5px; color: var(--ink-faint); letter-spacing:.03em; margin-bottom: 8px; }
+  .section-head h2{ font-size: 26px; }
+
+  /* ---------- mode toggle ---------- */
+  .mode-toggle{
+    display:inline-flex; flex-wrap:wrap; row-gap:6px; padding:4px; gap:4px;
+    background: transparent; border: 1px solid var(--line-strong); border-radius: 999px;
+  }
+  .mode-btn{
+    border:none; background:transparent; padding:10px 20px; border-radius:999px;
+    font-size:13.5px; color: var(--ink-soft); white-space:nowrap;
+    transition: background .25s var(--ease), color .25s var(--ease);
+  }
+  .mode-btn:hover{ color: var(--ink); }
+  .mode-btn.is-active{ background: var(--ink); color:#fff; }
+
+  /* ---------- roulette ---------- */
+  .generator-layout{
+    display:flex; align-items:center; gap:48px; margin-top:32px; flex-wrap:wrap;
+  }
+  @media (max-width: 760px){ .generator-layout{ flex-direction:column; gap:30px; } }
+
+  .roulette-card{
+    position:relative;
+    flex:1 1 100%; width:100%; min-width:0;
+    background: linear-gradient(165deg, #FFFFFF 0%, #F3F8FB 100%);
+    border: 1px solid var(--line); border-radius: var(--radius-l);
+    overflow:hidden;
+    box-shadow: 0 20px 46px rgba(22,34,46,.06);
+  }
+  .roulette-row{
+    position:relative;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    box-sizing:border-box;
+    padding: 24px 30px;
+    font-family:var(--font-body); font-size: 26px; line-height:1.32;
+  }
+  .roulette-row + .roulette-row{ border-top: 1px solid var(--line); }
+  .roulette-row.is-edge{
+    color: var(--ink-faint); font-weight:400;
+    transition: color .2s var(--ease);
+  }
+  .roulette-row.is-current{
+    color: var(--ink); font-weight:400;
+    padding: 32px 28px;
+    transition: color .2s var(--ease), opacity .18s var(--ease);
+  }
+  .roulette-row.is-current.is-spinning{ color: var(--ink-soft); }
+  @media (max-width: 640px){
+    .roulette-row{ font-size:18.5px; padding:16px 18px; }
+    .roulette-row.is-current{ padding:22px 18px; }
+  }
+  @keyframes rouletteLand{
+    0%{ transform: scale(.97); }
+    55%{ transform: scale(1.015); }
+    100%{ transform: scale(1); }
+  }
+  .roulette-row.is-current.is-landed{ animation: rouletteLand .5s var(--ease); }
+
+
+  .generator-actions{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+
+  /* ---------- timer ---------- */
+  .timer-card{
+    margin-top: 24px;
+    display:flex; align-items:center; gap:30px; flex-wrap:wrap; justify-content:space-between;
+  }
+  .timer-left{ display:flex; flex-direction:column; gap:14px; flex:1; min-width:220px; }
+  .timer-eyebrow{ font-size:12.5px; color: var(--ink-faint); letter-spacing:.02em; }
+  .timer-duration-picker{ display:flex; gap:8px; flex-wrap:wrap; }
+  .timer-chip{
+    font-size:13px; color: var(--ink-soft); background: var(--bg-soft);
+    border:1px solid transparent; padding:8px 15px; border-radius:20px; cursor:pointer;
+    transition: background .2s var(--ease), color .2s var(--ease);
+  }
+  .timer-chip:hover{ background: var(--accent-soft); color: var(--accent); }
+  .timer-chip.is-selected{ background: var(--ink); color:#fff; }
+  .timer-controls{ display:flex; gap:12px; }
+
+  .timer-ring-wrap{ display:grid; place-items:center; width:132px; height:132px; flex-shrink:0; }
+  .timer-ring-wrap > *{ grid-area: 1 / 1; }
+  .timer-ring-svg circle{ fill:none; }
+  .timer-ring-track{ stroke: var(--bg-soft); }
+  .timer-ring-progress{ stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1s linear, stroke .3s; }
+  .timer-ring-wrap.is-done .timer-ring-progress{ stroke: var(--good); }
+  .timer-value{ font-family:var(--font-body); font-size:22px; font-variant-numeric: tabular-nums; }
+  .timer-ring-wrap.is-done .timer-value{ font-size:15px; color: var(--good); }
+
+  footer.credit{
+    text-align:center; font-size: 12px; color: var(--ink-faint);
+    padding: 30px 0 40px;
+  }
+
+  /* ---------- mobile bottom nav (5 tabs: icon + label, same on every page) ---------- */
+  .mobile-nav{
+    display:none; position:fixed; left:0; right:0; bottom:0; z-index:80;
+    background: rgba(255,255,255,.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-top:1px solid var(--line);
+    padding: 4px max(4px, env(safe-area-inset-right)) calc(4px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left));
+  }
+  @media (max-width: 860px){ .mobile-nav{ display:flex; } main{ padding-bottom: calc(92px + env(safe-area-inset-bottom)); } }
+  .mobile-nav a{
+    flex:1 1 0; min-width:0; min-height:54px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    padding: 6px 2px; border-radius: var(--radius-m);
+    font-size:11px; line-height:1.15; color: var(--ink-faint);
+    transition: color .2s, background .2s;
+  }
+  .mobile-nav .label{ max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .mobile-nav svg{ width:22px; height:22px; flex-shrink:0; }
+  .mobile-nav a:active{ background: var(--bg-soft); }
+  .mobile-nav a.is-active{ color: var(--accent); }
+  .mobile-nav a.is-active svg{ stroke-width:2; }
+  @media (max-width: 340px){ .mobile-nav a{ font-size:10px; } }
+
+  .loading-gate{
+    position:fixed; inset:0; background: var(--bg); z-index:500;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; color: var(--ink-faint);
+    transition: opacity .4s var(--ease);
+  }
+  .loading-gate.is-hidden{ opacity:0; pointer-events:none; }
+
+  .hidden{ display:none !important; }
+
+  /* ---------- typography (Inter + PT Serif, Russian) ---------- */
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  body{ font-kerning:normal; text-rendering:optimizeLegibility; }
+  h1,h2,h3{ text-wrap:balance; hyphens:manual; }
+  p{ text-wrap:pretty; }
+
+  /* ---------- mobile polish ---------- */
+  html{ -webkit-tap-highlight-color: transparent; }
+  a, button, [role="button"], [role="link"], input, select, textarea{ touch-action: manipulation; }
+  body:has(.modal-overlay.is-open){ overflow:hidden; }
+  .modal-card{ max-height: 82dvh; }
+  footer.credit{ padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+  @media (max-width: 860px){
+    header{ padding-top: env(safe-area-inset-top); }
+    nav.wrap{ height: 60px; }
+    .logo{ padding: 10px 0; }
+    .btn{ min-height: 44px; }
+    .user-menu-btn{ min-height: 44px; }
+    .user-dropdown a, .user-dropdown button{ padding: 13px 14px; font-size: 15px; }
+    .modal-close{ width: 40px; height: 40px; top: 10px; right: 10px; font-size: 16px; }
+  }
+  @media (max-width: 640px){
+    section{ padding: 40px 0; }
+    .section-head{ margin-bottom: 20px; }
+    .section-head h2{ font-size: 23px; }
+    .modal-overlay{ align-items: flex-end; padding: 0; }
+    .modal-card{
+      max-width: none; max-height: 88vh; max-height: 88dvh;
+      border-radius: var(--radius-l) var(--radius-l) 0 0; border-bottom: none;
+      padding: 30px 20px calc(24px + env(safe-area-inset-bottom));
+      transform: translateY(36px); overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    }
+    .modal-overlay.is-open .modal-card{ transform: translateY(0); }
+  }
+  @media (max-width: 640px){
+    .mode-toggle{ display:flex; flex-wrap:nowrap; width:100%; gap:2px; border-radius:999px; }
+    .mode-btn .lbl-full{ display:none; }
+    .mode-btn .lbl-short{ display:inline; }
+    .mode-btn{ flex:1 1 0; min-width:0; padding:10px 8px; border-radius:999px; white-space:normal; line-height:1.25; min-height:46px; font-size:13px; }
+  }
+
+  /* ================= синхронизация с index.html ================= */
+  #bgImage{ position:fixed; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; background:url('static/background.jpg') center / cover no-repeat; }
+  img.emoji{ display:inline-block; width:1.15em; height:1.15em; vertical-align:-0.2em; margin:0 .04em; }
+
+  /* Шрифты интерфейса: как в index (кнопки, навигация, меню, чипы, логотип) */
+  .btn, .side-nav-item, .user-dropdown a, .user-dropdown button,
+  .mode-btn, .timer-chip, .kind-btn, .skill-reset, .logo{
+    font-family: var(--font-body); font-weight:400;
+  }
+  .btn{ font-size:16.5px; }
+  .side-nav-item{ font-size:16px; }
+  .user-dropdown a, .user-dropdown button{ font-size:15.5px; }
+  .mode-btn, .timer-chip, .kind-btn{ font-size:15px; }
+  .logo{ font-size:22px; }
+  .section-head .eyebrow{ font-family: var(--font-body); font-size:15px; }
+  .welcome h1{ font-family: var(--font-heading); font-size: clamp(34px, 5vw, 54px); }
+  .welcome-sub{ font-family: var(--font-hand); font-size:25px; color: var(--accent); }
+
+  /* Стекло поверх фонового видео (как .card и header в index) */
+  .card, header, .roulette-card, .training-card,
+  .skill-shortcut, .kind-switch, .lib-card.lc{ background: rgba(247,250,252,0.30); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+  .roulette-card, .training-card{ background-image:none; }
+
+  /* Кнопки: скруглённые, цвет --accent */
+  .btn{ border-radius:999px; padding:12px 26px; }
+  .btn-primary{ background: var(--accent); color:#fff; }
+  .btn-primary:hover{ background: var(--accent); filter: brightness(.9); transform: translateY(-1px); }
+  .btn-primary.is-copied{ background: var(--good); filter:none; }
+  .btn-ghost{ border-radius:999px; }
+  .btn-ghost:hover{ border-color: var(--accent); color: var(--accent); }
+  .btn-danger-ghost, .btn-danger-solid{ border-radius:999px; }
+  @media (max-width: 860px){ .btn{ min-height:44px; } }
+
+  /* Скользящий индикатор выбора (как .tc-type-indicator в index, цвет --accent) */
+  .sel-indicator{
+    position:absolute; top:0; left:0; z-index:0; pointer-events:none; opacity:0;
+    transition: transform .5s var(--ease), width .5s var(--ease), height .5s var(--ease), opacity .3s var(--ease);
+  }
+  .sel-indicator.is-ready{ opacity:1; }
+  .sel-indicator.no-anim{ transition:none; }
+  .sel-indicator.is-fill-accent{ background: var(--accent); }
+  .sel-indicator.is-outline{ z-index:2; border:1.5px solid var(--accent); background: rgba(0,119,179,.05); }
+  [data-slide-host]{ position:relative; }
+  [data-slide-host] > :not(.sel-indicator){ position:relative; z-index:1; }
+  @media (prefers-reduced-motion: reduce){ .sel-indicator{ transition:none; } }
+
+  .mode-toggle .mode-btn.is-active, .mode-toggle .mode-btn.is-active:hover{ background: transparent; color:#fff; }
+  .timer-duration-picker .timer-chip.is-selected, .timer-duration-picker .timer-chip.is-selected:hover{ background: transparent; color:#fff; }
+  .timer-duration-picker .timer-chip:hover{ background: transparent; }
+  .kind-switch .kind-btn.is-active, .kind-switch .kind-btn.is-active:hover{ background: transparent; color:#fff; }
+  #skillShortcuts .skill-shortcut.is-active{ border-color: var(--line); box-shadow:none; }
+  #skillShortcuts .skill-shortcut.is-active:hover{ border-color: rgba(0,119,179,.35); }
+
+  /* «Крутить!»: перелив градиента + блик при наведении, «вдавливание» при нажатии (как «Начать запись» в index) */
+  #spinBtn{
+    position:relative; overflow:hidden; isolation:isolate;
+    background: linear-gradient(110deg, #0077B3 0%, #3AA8DC 50%, #0077B3 100%);
+    background-size: 200% 100%; background-position: 0% 50%;
+    box-shadow: 0 6px 18px rgba(0,119,179,.28);
+    transition: transform .25s var(--ease), box-shadow .3s;
+  }
+  #spinBtn::after{
+    content:''; position:absolute; top:0; left:-70%; width:50%; height:100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,.5), transparent);
+    transform: skewX(-20deg); pointer-events:none; opacity:0;
+  }
+  #spinBtn:hover:not(:disabled){
+    background: linear-gradient(110deg, #0077B3 0%, #3AA8DC 50%, #0077B3 100%);
+    background-size: 200% 100%; filter:none; transform:none;
+    animation: recordFlow 2.4s linear infinite;
+    box-shadow: 0 10px 26px rgba(0,119,179,.38);
+  }
+  #spinBtn:hover:not(:disabled)::after{ animation: recordShine .9s var(--ease); }
+  #spinBtn:active:not(:disabled){
+    transform: scale(.96); box-shadow: 0 3px 10px rgba(0,119,179,.3);
+    transition-duration: .1s;
+  }
+  #spinBtn:active:not(:disabled)::after{ animation: recordShinePress .6s var(--ease); }
+  #spinBtn:disabled{ box-shadow:none; }
+  @keyframes recordFlow{ from{ background-position: 0% 50%; } to{ background-position: 200% 50%; } }
+  @keyframes recordShine{ 0%{ left:-70%; opacity:1; } 100%{ left:130%; opacity:1; } }
+  @keyframes recordShinePress{ 0%{ left:-70%; opacity:1; } 100%{ left:130%; opacity:1; } }
+  @media (prefers-reduced-motion: reduce){
+    #spinBtn:hover:not(:disabled), #spinBtn:hover:not(:disabled)::after,
+    #spinBtn:active:not(:disabled)::after{ animation:none; }
+  }
+
+  /* ---------- шапка: переключатель языка ---------- */
+  .mode-ico{ display:inline-block; margin-right:.45em; font-size:1.15em; line-height:1; }
+  .mode-ico img.emoji{ width:1.3em; height:1.3em; vertical-align:-0.3em; margin:0; }
+  .lbl-short{ display:none; }
+  .head-right{ display:flex; align-items:center; gap:14px; }
+  .lang-switch{ display:inline-flex; padding:3px; gap:2px; background: var(--bg-soft); border-radius:999px; }
+  .lang-btn{
+    border:none; background:transparent; padding:7px 13px; border-radius:999px;
+    font-size:12.5px; letter-spacing:.04em; color: var(--ink-soft);
+    transition: background .25s var(--ease), color .25s var(--ease);
+  }
+  .lang-btn:hover{ color: var(--ink); }
+  .lang-btn.is-active{ background: var(--ink); color:#fff; }
+  .lang-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  @media (max-width:520px){
+    .head-right{ gap:8px; }
+    .lang-btn{ padding:7px 9px; font-size:12px; }
+  }
+
+  /* ---------- круглая кнопка-контур (без заливки) ---------- */
+  .section-head-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .round-btn{
+    flex:0 0 auto; width:44px; height:44px; padding:0; border-radius:50%;
+    display:inline-grid; place-items:center;
+    background:transparent; border:1px solid var(--line-strong); color: var(--ink-soft);
+    transition: border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
+  }
+  .round-btn svg{ width:20px; height:20px; display:block; }
+  .round-btn:hover{ border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .round-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* ---------- как тренироваться с барабаном ---------- */
+  .back-link{ display:inline-flex; align-items:center; gap:8px; margin-bottom:22px; font-size:14px; color: var(--ink-soft); transition: color .25s var(--ease); }
+  .back-link:hover{ color: var(--accent); }
+  #guide{ padding-top:44px; border-top:none; }
+  #guide .section-head h2, .guide-card h3{ color: var(--accent); }
+  .guide-lead{ max-width:680px; margin:0 0 28px; font-size:16.5px; line-height:1.6; color: var(--ink-soft); }
+  .guide-grid{ display:grid; gap:16px; }
+  .guide-card{ padding:28px 30px; }
+  .guide-card h3{ font-size:22px; line-height:1.25; margin:0 0 6px; }
+  .guide-note{ margin:0; font-size:14.5px; line-height:1.55; color: var(--ink-faint); max-width:640px; }
+  .guide-note + .guide-note{ margin-top:6px; }
+  .guide-label{ margin:20px 0 10px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color: var(--accent); }
+  .guide-steps{ margin:0; padding-left:22px; display:grid; gap:9px; font-size:15.5px; line-height:1.6; color: var(--ink); max-width:700px; }
+  .guide-steps li::marker{ color: var(--accent); font-weight:400; }
+  .guide-benefit{ margin:20px 0 0; padding:15px 18px; background: var(--accent-soft); border-radius:12px; max-width:700px; }
+  .guide-benefit p.guide-label{ margin:0 0 6px; font-size:12px; line-height:1.4; color: var(--accent); }
+  .guide-benefit p{ font-size:15px; line-height:1.6; color: var(--ink); }
+  .guide-list{ list-style:none; margin:14px 0 0; padding:0; display:grid; gap:10px; max-width:700px; }
+  .guide-list li{ position:relative; padding-left:20px; font-size:15.5px; line-height:1.6; color: var(--ink); }
+  .guide-list li::before{ content:''; position:absolute; left:2px; top:.62em; width:8px; height:8px; border-radius:50%; background: var(--accent-soft); border:2px solid var(--accent); box-sizing:border-box; }
+  .guide-tip{ margin:16px 0 0; font-size:14.5px; line-height:1.6; color: var(--ink-soft); max-width:700px; }
+  .guide-actions{ margin-top:24px; }
+  .guide-actions .btn{ display:inline-flex; text-decoration:none; }
+  @media (max-width: 640px){
+    .guide-card{ padding:20px 18px; }
+    .guide-card h3{ font-size:19px; }
+    .guide-steps, .guide-list li{ font-size:15px; }
+  }
+  b,strong,th{ font-weight:400; }
+</style>
+</head>
+<body>
+<div id="bgImage" aria-hidden="true"></div>
+
+
+<div class="loading-gate" id="loadingGate" data-i18n="loading">Загружаем…</div>
+
+
+
+<header id="siteHeader">
+  <nav class="wrap">
+    <a href="index.html" class="logo">говори<span>·</span>ясно</a>
+    <div class="head-right">
+    <div class="lang-switch" id="langSwitch" role="group" aria-label="Язык / Language">
+      <button type="button" class="lang-btn is-active" data-lang="ru" aria-pressed="true">RU</button>
+      <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section id="guide">
+    <div class="wrap">
+      <a class="back-link reveal" id="backLink" href="index.html">← К барабану</a>
+      <div class="section-head reveal"><h2 id="guideTitle"></h2></div>
+      <p class="guide-lead reveal" id="guideLead"></p>
+      <div class="guide-grid reveal" id="guideGrid"></div>
+      <div class="guide-actions reveal"><a class="btn btn-primary" id="toWheelBtn" href="index.html">К барабану</a></div>
+    </div>
+  </section>
+</main>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasGsap = !!(window.gsap && window.ScrollTrigger);   // без CDN страница всё равно работает
+  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+
+  const $ = (id) => document.getElementById(id);
+  const loadingGate = $('loadingGate');
+  const state = { lang: 'ru' };
+  try { const v = localStorage.getItem('gy_topics_lang'); if (v === 'ru' || v === 'en') state.lang = v; } catch (e) {}
+
+  const LANG_KEY = 'gy_topics_lang';   // язык общий для барабана и страницы с инструкцией
+
+  const UI = {
+    ru: { title: 'Как тренироваться с барабаном — говори·ясно', back: '← К барабану', toWheel: 'К барабану', loading: 'Загружаем…' },
+    en: { title: 'How to train with the wheel — говори·ясно', back: '← Back to the wheel', toWheel: 'Back to the wheel', loading: 'Loading…' },
+  };
+
+  const GUIDE = {
+    "ru": {
+      "title": "Как тренироваться с барабаном",
+      "lead": "Барабан выбирает тему, а что с ней делать, решаете вы. Ниже три способа. Начните с первого, а когда станет легко, переходите к следующим. Хватит и пяти минут в день.",
+      "how": "Как делать",
+      "benefit": "Польза",
+      "methods": [
+        {
+          "h": "1. Говорить всё, что приходит в голову",
+          "note": "Самый простой способ. Подходит, чтобы разогнаться.",
+          "steps": [
+            "Покрутите барабан и прочитайте тему.",
+            "Сразу начните говорить вслух. Первая фраза может быть любой: «Я думаю об этом так…» или «Первое, что приходит в голову…».",
+            "Не поправляйте себя и не ищите идеальные слова. Если мысль закончилась, возьмите другую, связанную с темой, и продолжайте.",
+            "Остановитесь через минуту. Если было легко, попробуйте две."
+          ],
+          "benefit": "Вы привыкаете начинать говорить без подготовки и не замирать, когда в голове пусто. Это нужно на встречах, в разговоре с новыми людьми и когда задают вопрос, которого вы не ждали. Страх пустой головы слабеет, потому что вы уже много раз из неё выбирались."
+        },
+        {
+          "h": "2. Подготовиться с таймером, а потом говорить",
+          "note": "Так готовятся к реальным выступлениям и ответам на вопросы.",
+          "steps": [
+            "Покрутите барабан и нажмите «Запустить таймер». Выберите время на подготовку: сначала 1 минуту, потом 3 или 5.",
+            "За это время найдите одну главную мысль, один пример из жизни и придумайте, чем закончите. Писать много не нужно, хватит нескольких слов на бумаге.",
+            "Когда таймер закончится, говорите 1–2 минуты по схеме: мысль, почему вы так думаете, пример, вывод.",
+            "Скажите вывод своими словами и остановитесь. Добавлять «ну вот, в общем» не нужно."
+          ],
+          "benefit": "Вы учитесь быстро собирать мысль и выстраивать её по порядку, и слушателю проще вас понять. Слов-паразитов становится меньше: когда знаешь, куда идёшь, реже говоришь «ну» и «эээ». Та же схема помогает отвечать на собеседовании и на вопросы коллег."
+        },
+        {
+          "h": "3. Изучить тему, выписать тезисы и рассказать",
+          "note": "Для режима «Глубокое исследование». Там понятия и парадоксы, о которых мало кто может рассказать без подготовки.",
+          "steps": [
+            "Выберите режим «Глубокое исследование» и покрутите барабан.",
+            "Потратьте 10–15 минут на чтение: пара статей, видео или страница энциклопедии. Текст не копируйте.",
+            "Выпишите 3–5 тезисов своими словами, каждый одной фразой. К каждому добавьте пример.",
+            "Уберите источники и расскажите тему по тезисам, как будто объясняете другу. Это 2–3 минуты.",
+            "Сверьтесь с источником: что забыли, что поняли неверно. Через несколько дней расскажите ту же тему ещё раз."
+          ],
+          "benefit": "Вы разбираетесь в теме глубже, чем после обычного чтения: пока объясняешь вслух, сразу видно, что понял не до конца. Тезисы приучают отделять главное от второстепенного, а примеры оживляют речь. Запоминается тоже больше: пересказ своими словами работает лучше, чем перечитывание."
+        }
+      ],
+      "moreTitle": "Что ещё поможет",
+      "more": [
+        "Выбирайте категорию. Для собеседования, питча и объяснения простыми словами есть отдельные наборы, так можно готовиться к конкретной ситуации.",
+        "Говорите вслух, а не про себя. В голове мысль кажется стройной, а вслух слышны пробелы.",
+        "Записывайте себя на телефон и слушайте через день. Первые разы неприятно, зато лучше всего слышны паузы и повторы.",
+        "Возвращайтесь к теме через неделю. Второй раз почти всегда получается лучше, и вы видите свой рост.",
+        "Берите противоположную позицию. Сначала скажите, почему «за», потом почему «против». Так проще понимать чужие доводы.",
+        "Тренируйтесь вдвоём. Один крутит барабан, второй говорит, потом задаёт вопрос по теме.",
+        "Пять минут каждый день лучше, чем час раз в неделю."
+      ],
+      "enTitle": "Заодно прокачайте английский",
+      "enLead": "Нажмите EN в правом верхнем углу, и все темы станут английскими. Три способа выше работают так же, только говорить нужно по-английски. Если даётся трудно, начните с двух-трёх предложений и добавляйте время постепенно.",
+      "enWordsLead": "В английской версии появляется режим «Words»: слова уровней от A2 до C2 с определением и примером. Уровень можно выбрать.",
+      "enSteps": [
+        "Покрутите барабан, прочитайте слово, определение и пример.",
+        "Произнесите слово и пример вслух два-три раза.",
+        "Придумайте своё предложение с этим словом, лучше про себя или свою жизнь.",
+        "Поговорите 30 секунд на любую тему и вставьте это слово.",
+        "Вернитесь к слову через день и вспомните его без подсказки."
+      ],
+      "enBenefit": "Слова запоминаются вместе с ситуацией, а не списком, и вы сразу учитесь ими пользоваться. Вы привыкаете думать по-английски, а не переводить с русского в голове. Определения написаны по-английски, поэтому, разбирая одно слово, вы читаете ещё пять. Говорить вслух полезно ещё и потому, что так тренируются произношение и скорость речи, а не только узнавание слов.",
+      "enTip": "Сами темы тоже работают как словарь: Emergency fund, Compound interest, Burn rate. Сначала объясните термин, потом расскажите, как он связан с вами."
+    },
+    "en": {
+      "title": "How to train with the wheel",
+      "lead": "The wheel picks a topic, and what you do with it is up to you. Here are three ways. Start with the first, and move on when it gets easy. Five minutes a day is enough.",
+      "how": "How to do it",
+      "benefit": "Why it helps",
+      "methods": [
+        {
+          "h": "1. Say whatever comes to mind",
+          "note": "The simplest way. Good for warming up.",
+          "steps": [
+            "Spin the wheel and read the topic.",
+            "Start talking out loud right away. Your first sentence can be anything: “Here is how I see it…” or “The first thing that comes to mind is…”.",
+            "Don't correct yourself or hunt for perfect words. If a thought runs out, pick another one connected to the topic and keep going.",
+            "Stop after a minute. If it felt easy, try two."
+          ],
+          "benefit": "You get used to starting without preparation and not freezing when your mind goes blank. That helps in meetings, in small talk and when someone asks a question you did not expect. The fear of a blank mind fades because you have already got out of it many times."
+        },
+        {
+          "h": "2. Prepare with the timer, then speak",
+          "note": "This is how you prepare for real talks and answers to questions.",
+          "steps": [
+            "Spin the wheel and press “Start a timer”. Pick your preparation time: 1 minute at first, then 3 or 5.",
+            "Use it to find one main idea and one example from real life, and decide how you will finish. You don't need to write much, a few words on paper are enough.",
+            "When the timer ends, speak for 1–2 minutes using a simple frame: point, reason, example, conclusion.",
+            "Say your conclusion in your own words and stop. No need for “so, yeah, anyway”."
+          ],
+          "benefit": "You learn to gather a thought quickly and put it in order, so listeners follow you more easily. You use fewer fillers: when you know where you are heading, you say “um” less. The same frame helps with interview answers and with questions from colleagues."
+        },
+        {
+          "h": "3. Study the topic, note the key points, then explain",
+          "note": "For the Deep research mode. It has concepts and paradoxes that few people can explain without preparation.",
+          "steps": [
+            "Choose Deep research and spin the wheel.",
+            "Spend 10–15 minutes reading: a couple of articles, a video or an encyclopedia page. Don't copy the text.",
+            "Write 3–5 key points in your own words, one sentence each. Add an example to every point.",
+            "Put the sources away and explain the topic from your key points, as if telling a friend. That takes 2–3 minutes.",
+            "Check against the source: what did you forget, what did you get wrong. Explain the same topic again a few days later."
+          ],
+          "benefit": "You understand the topic better than after plain reading: when you explain out loud, it is obvious right away what you have not fully understood. Key points teach you to separate the main from the secondary, and examples bring speech to life. You also remember more, because retelling in your own words works better than rereading."
+        }
+      ],
+      "moreTitle": "What else helps",
+      "more": [
+        "Pick a category. There are separate sets for interviews, pitches and explaining things simply, so you can prepare for a specific situation.",
+        "Speak out loud, not in your head. In your head a thought seems tidy, but out loud you hear the gaps.",
+        "Record yourself on your phone and listen a day later. The first times are uncomfortable, but that is the best way to hear pauses and repeats.",
+        "Come back to a topic after a week. The second time is almost always better, and you can see your progress.",
+        "Take the opposite side. First say why “for”, then why “against”. It makes other people's arguments easier to understand.",
+        "Practice with someone. One person spins the wheel, the other speaks and then gets a question about the topic.",
+        "Five minutes every day beats an hour once a week."
+      ],
+      "enTitle": "Build your English at the same time",
+      "enLead": "Press EN in the top corner and all topics turn English. The three ways above work the same, you just speak English. If it comes hard, start with two or three sentences and add time gradually.",
+      "enWordsLead": "The English version also has a Words mode: words from A2 to C2 with a definition and an example. You can choose the level.",
+      "enSteps": [
+        "Spin the wheel and read the word, the definition and the example.",
+        "Say the word and the example out loud two or three times.",
+        "Make up your own sentence with the word, ideally about yourself or your life.",
+        "Speak for 30 seconds on any topic and work the word in.",
+        "Come back to the word a day later and recall it without a hint."
+      ],
+      "enBenefit": "Words stick together with a situation instead of as a list, and you learn to use them right away. You get used to thinking in English instead of translating in your head. Definitions are written in English, so while working through one word you read five more. Speaking out loud also trains pronunciation and speed, not just recognizing words.",
+      "enTip": "The topics themselves work like a dictionary too: Emergency fund, Compound interest, Burn rate. First explain the term, then tell how it relates to you."
+    }
+  };
+
+  function el(tag, cls, text){
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function stepsList(items){
+    const ol = el('ol', 'guide-steps');
+    items.forEach((s) => ol.appendChild(el('li', null, s)));
+    return ol;
+  }
+  function benefitBox(label, text){
+    const box = el('div', 'guide-benefit');
+    box.append(el('p', 'guide-label', label), el('p', null, text));
+    return box;
+  }
+
+  function renderGuide(){
+    const g = GUIDE[state.lang] || GUIDE.ru;
+    $('guideTitle').textContent = g.title;
+    $('guideLead').textContent = g.lead;
+    const grid = $('guideGrid');
+    grid.replaceChildren();
+
+    g.methods.forEach((m) => {
+      const card = el('article', 'card guide-card');
+      card.append(el('h3', null, m.h), el('p', 'guide-note', m.note), el('p', 'guide-label', g.how), stepsList(m.steps), benefitBox(g.benefit, m.benefit));
+      grid.appendChild(card);
+    });
+
+    const more = el('article', 'card guide-card');
+    const list = el('ul', 'guide-list');
+    g.more.forEach((s) => list.appendChild(el('li', null, s)));
+    more.append(el('h3', null, g.moreTitle), list);
+    grid.appendChild(more);
+
+    const eng = el('article', 'card guide-card');
+    eng.append(
+      el('h3', null, g.enTitle),
+      el('p', 'guide-note', g.enLead),
+      el('p', 'guide-note', g.enWordsLead),
+      el('p', 'guide-label', g.how),
+      stepsList(g.enSteps),
+      benefitBox(g.benefit, g.enBenefit),
+      el('p', 'guide-tip', g.enTip)
+    );
+    grid.appendChild(eng);
+  }
+
+  /* ---------- language ---------- */
+
+  const langButtons = Array.from(document.querySelectorAll('.lang-btn'));
+  function applyLang(){
+    const ui = UI[state.lang] || UI.ru;
+    document.documentElement.lang = state.lang;
+    document.title = ui.title;
+    $('backLink').textContent = ui.back;
+    $('toWheelBtn').textContent = ui.toWheel;
+    loadingGate.textContent = ui.loading;
+    langButtons.forEach((b) => {
+      const on = b.dataset.lang === state.lang;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    renderGuide();
+  }
+  langButtons.forEach((b) => b.addEventListener('click', () => {
+    if (b.dataset.lang === state.lang) return;
+    state.lang = b.dataset.lang;
+    try { localStorage.setItem(LANG_KEY, state.lang); } catch (e) { /* private mode */ }
+    applyLang();
+  }));
+
+  function setupRevealAnimations(){
+    if (reduceMotion || !hasGsap){
+      document.querySelectorAll('.reveal').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+      return;
+    }
+    document.querySelectorAll('.reveal').forEach((el) => {
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 92%' } });
+    });
+  }
+
+  function init(){
+    applyLang();
+    loadingGate.classList.add('is-hidden');
+    setTimeout(() => { loadingGate.style.display = 'none'; }, 450);
+    try { setupRevealAnimations(); } catch (e) { console.error(e); }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
